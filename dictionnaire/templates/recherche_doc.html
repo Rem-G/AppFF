@@ -1,0 +1,38 @@
+{% extends "base_docff.html" %}
+{% load staticfiles %}
+
+{% block contenu %}
+
+<div class="page-header">
+	<h3>Résultats<small> {{mots_clefs}}</small></a></h3>
+</div>
+
+{% if variables|length > 0 %}
+<p><i class="fa fa-check"></i> indique la présence de la variable dans le dernier millésime.</p>
+{% for variable in variables %}
+	<div class="panel panel-default">
+	    <div class="panel-heading">
+		    <h3 class="panel-title">
+		    {% if variable.url_modalite != None %}
+		    	<i class="fa fa-star-o"></i><a href= '{{variable.url_modalite}}'>{{variable.nom}} (Accéder aux modalités)</a> (<a href="{% url 'dictionnaire:doc_table' variable.table_associee "Multi" variable.nom %}"><i class="fa fa-table"></i> {{variable.table_associee}} (Accéder à la table)</a>)
+            {% else %}
+                <i class="fa fa-star-o"></i> {{variable.nom}} (<a href="{% url 'dictionnaire:doc_table' variable.table_associee "Multi" variable.nom %}"><i class="fa fa-table"></i> {{variable.table_associee}} (Accéder à la table)</a>)
+            {% endif %}
+		    </h3>
+	    </div>
+	    <div class="panel-body">
+	    <p>Depuis millesime : {{variable.decrypt_syntax_millesime.0}}</p>
+	    <p>Jusque millesime : {% if variable.decrypt_syntax_millesime.1 == None %} <i class="fa fa-check"></i> {% else %} {{variable.decrypt_syntax_millesime.1}} {% endif %}</p>
+	   <p>Position dans la table : {{variable.numero}}</p>
+	    <p>Description de la variable : {{variable.description}}</p>		
+		</div>
+	</div>
+{% endfor %}
+
+{% else %}
+
+<h4>Aucun résultat trouvé pour {{mots_clefs}}.</h4>
+
+{% endif %}
+
+{% endblock %} 

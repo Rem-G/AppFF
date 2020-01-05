@@ -1,0 +1,36 @@
+{% extends "principal.html" %}
+{% load staticfiles %}
+ 
+{% block body %}
+<div class="container">
+    <div class="page-header espace-titre">
+    	 <div class="text-left">
+    		<h3><a href = '{% url 'accueil_docff' %}' style="color:#333333"><i class="fa fa-home"></i> Accueil</a></h3>
+    	</div>
+          <div class="text-right">
+        	<img src="{% static 'img/cerema_logo.png' %}"></img>
+        </div>
+    	<div class="text-left">
+        	<h2><a href = '{% url 'dictionnaire:accueil_doc' %}' style="color:#333333"><i class="fa fa-book"></i> DocFF - dictionnaire des  Fichiers fonciers - Tables principales</a></h2>
+        </div>
+    </div>
+    <form method="POST" action="{% url 'dictionnaire:recherche' %}">
+	<div class="row">
+	   <div class="col-sm-offset-3 col-sm-6">  
+		<div class="input-group">
+		  <div class="input-group-btn">
+		  	<a class="btn btn-default" href='{% url 'dictionnaire:accueil_doc' %}'><i class="fa fa-table"></i></a>
+		    <button class="btn btn-default"><i class="fa fa-search"></i></button>
+		  </div>
+		  <input type="text" class="form-control" placeholder="Recherche" name="motclef">
+		  {% csrf_token %}
+		</div>
+	   </div>
+	</div>
+	</form>
+    
+{% block contenu %}{% endblock %}
+
+</div><!-- /.container -->
+
+{% endblock %}

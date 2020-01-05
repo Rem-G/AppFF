@@ -1,0 +1,88 @@
+{% extends "base_docff.html" %}
+{% load staticfiles %}
+
+{% block contenu %}
+
+<div class="page-header">
+<div style="text-align: center">
+			<img src="{% static "img/ff_modele_donnees.png" %}" alt="Carte cliquable" usemap="#map">
+
+			<map name="map">
+			<area href="{% url 'dictionnaire:doc_table' "pb40_pevprincipale" "Multi" "" %}" shape="rect" coords="30,65,150,120" alt="pb40" title="pb40">
+			<area href="{% url 'dictionnaire:doc_table' "pb50_pevprofessionnelle" "Multi" "" %}" shape="rect" coords="30,135,150,190" alt="pb50" title="pb50">
+			<area href="{% url 'dictionnaire:doc_table' "pb60_pevdependances" "Multi" "" %}" shape="rect" coords="30,205,150,260" alt="pb60" title="pb60">
+			<area href="{% url 'dictionnaire:doc_table' "pb21_pev" "Multi" "" %}" shape="rect" coords="55,280,175,335" alt="pb21" title="pb21">
+			<area href="{% url 'dictionnaire:doc_table' "pb30_pevexoneration" "Multi" "" %}" shape="rect" coords="30,350,150,405" alt="pb30" title="pb30">
+			<area href="{% url 'dictionnaire:doc_table' "pb36_pevtaxation" "Multi" "" %}" shape="rect" coords="30,415,150,470" alt="pb36" title="pb36">
+			<area href="{% url 'dictionnaire:doc_table' "pb0010_local" "Multi" "" %}" shape="rect" coords="285,280,405,335" alt="pb0010" title="pb0010">
+			<area href="{% url 'dictionnaire:doc_table' "lots_locaux" "Multi" "" %}" shape="rect" coords="375,65,520,120" alt="lots_locaux" title="lots_locaux">
+			<area href="{% url 'dictionnaire:doc_table' "pdl30_lots" "Multi" "" %}" shape="rect" coords="670,65,805,105" alt="pdl30" title="pdl30">
+			<area href="{% url 'dictionnaire:doc_table' "pdl10_pdl" "Multi" "" %}" shape="rect" coords="670,130,805,200" alt="pdl10" title="pdl10">
+			<area href="{% url 'dictionnaire:doc_table' "pdl20_parcellecomposante" "Multi" "" %}" shape="rect" coords="815,130,950,200" alt="pdl20" title="pdl20">
+			<area href="{% url 'dictionnaire:doc_table' "pnb10_parcelle" "Multi" "" %}" shape="rect" coords="635,280,765,335" alt="pnb10" title="pnb10">
+			<area href="{% url 'dictionnaire:doc_table' "pnb21_suf" "Multi" "" %}" shape="rect" coords="780,280,915,335" alt="pnb21" title="pnb21">
+			<area href="{% url 'dictionnaire:doc_table' "pnb30_sufexoneration" "Multi" "" %}" shape="rect" coords="820,350,950,405" alt="pnb30" title="pnb30">
+			<area href="{% url 'dictionnaire:doc_table' "pnb36_suftaxation" "Multi" "" %}" shape="rect" coords="820,415,950,470" alt="pnb36" title="pnb36">
+			<area href="{% url 'dictionnaire:doc_table' "proprietaire_droit" "Multi" "" %}" shape="rect" coords="415,415,550,470" alt="proprietaire_droit" title="proprietaire_droit">
+			<area href="{% url 'dictionnaire_ta:doc_table' "TUP" "" %}" shape="rect" coords="784,512,956,570" alt="tup" title="tup">
+
+			</map>
+	</div>
+<h3>Tables principales</h3>
+</div>
+{% for groupe_table in tables %}
+<div class="panel panel-default">
+    <div class="panel-heading">
+	    <h3 class="panel-title"><i class="fa fa-table"></i> Tables essentielles</h3>
+    </div>
+    <div class="panel-body">
+
+	<table class="table table-striped" width = "100 %">
+		{% for table in groupe_table.desc_table %}
+		<tr>
+			{% for nom, description in table.items %}
+				{% if nom == 'pb0010_local' or nom == 'pnb10_parcelle' or nom == 'proprietaire_droit' or nom == 'TUP' %}
+				{% if nom == 'TUP' %}
+					<td width="20%" style="vertical-align: middle;"><a href="{% url 'dictionnaire_ta:doc_table' nom "" %}">{{nom}}</a></td>
+					<td style="vertical-align: middle;">{{description}}</td>
+				{% else %}
+					<td width="20%" style="vertical-align: middle;"><a href="{% url 'dictionnaire:doc_table' nom "Multi" "" %}">{{nom}}</a></td>
+					<td style="vertical-align: middle;">{{description}}</td>
+				{% endif %}							
+				{% endif %}
+			{% endfor %}
+		</tr>	
+		{% endfor %}
+	</table> 
+	</div>
+</div>
+
+{% endfor %}
+
+<div class="page-header">
+{% for groupe_table in tables %}
+<div class="panel panel-default">
+    <div class="panel-heading">
+	    <h3 class="panel-title"><i class="fa fa-table"></i> Autres tables</h3>
+    </div>
+    <div class="panel-body">
+
+	<table class="table table-striped" width = "100 %">
+		{% for table in groupe_table.desc_table %}
+		<tr>
+			{% for nom, description in table.items %}
+				{% if nom != 'pb0010_local' and nom != 'pnb10_parcelle' and nom != 'proprietaire_droit' and nom != 'TUP' %}
+					<td width="20%" style="vertical-align: middle;"><a href="{% url 'dictionnaire:doc_table' nom "Multi" "" %}">{{nom}}</a></td>
+					<td style="vertical-align: middle;">{{description}}</td>			
+				{% endif %}
+			{% endfor %}
+		</tr>	
+		{% endfor %}
+	</table> 
+	</div>
+</div>
+</div>
+
+{% endfor %} 
+
+{% endblock %} 

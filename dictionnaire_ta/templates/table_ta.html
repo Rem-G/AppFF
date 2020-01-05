@@ -1,0 +1,42 @@
+{% extends "base_docff_ta.html" %}
+{% load staticfiles %}
+{% load template_filters %}
+
+{% block contenu %}
+
+<div class="page-header">
+<h3><i class="fa fa-table"></i> Table {{table}}</h3>
+</div>
+<p><span style = 'background : #FFCB87'>Les champs surlignées sont des champs créés par le Cerema</span></p>
+<br>
+<table class="table-bordered table-striped table-condensed" width="100%">
+	<tr>
+		<th>N°</th>
+		<th>Nom</th>
+		<th>Description</th>
+		<th>Observation</th>
+		<th>Nature</th>
+	</tr>
+{% for var in liste_ordre %}
+	{% for variable in variables %}
+		{% if var == variable.nom %}
+			{% if variable_recherche == variable.nom %}
+    			<script>
+    				$(function() {
+    					 $('html, body').animate({scrollTop:$('#{{variable_recherche}}').offset().top}, 'slow');
+    				});
+    			</script>
+			{% endif %}
+		<tr {% if variable_recherche == variable.nom %} class="recherche" {% endif %}>
+			<td {% if variable.origine == "Cerema" %} bgcolor = '#FFCB87' {% endif %}>{{liste_ordre|index:variable.nom}}<a id={{variable.nom}}></a></td>
+			<td {% if variable.origine == "Cerema" %} bgcolor = '#FFCB87' {% endif %}>{{variable.nom}}</td>
+			<td {% if variable.origine == "Cerema" %} bgcolor = '#FFCB87' {% endif %}>{{variable.description}}</td>
+			<td {% if variable.origine == "Cerema" %}  bgcolor = '#FFCB87' {% endif %}>{% if variable.observation != NULL %} {{variable.observation}} {% endif %}</td>
+			<td {% if variable.origine == "Cerema" %} bgcolor = '#FFCB87' {% endif %}>{{variable.nature_variable}}</td>
+		</tr>
+		{% endif %}
+	{% endfor %}
+{% endfor %}
+</table>
+
+{% endblock %} 

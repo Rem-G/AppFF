@@ -1,0 +1,32 @@
+{% extends "base_docff.html" %}
+{% load staticfiles %}
+
+{% block contenu %}
+
+<div class="page-header">
+<h4><a href = "{% url 'dictionnaire:doc_table' variable.table_associee "Multi" '' %}">Retour table {{table}}</a></h4>
+<h3><i class="fa fa-table"></i> Doc variable {{variable.nom}} dans la table {{table}}</h3>
+</div>
+<p><i class="fa fa-check"></i> indique la présence de la variable dans le dernier millésime.</p>
+<table class="table-bordered table-striped table-condensed" width="100%">
+	<tr>
+		<th>Code</th>
+		<th>Valeur</th>
+		<th>Description</th>
+		<th>Observation</th>
+		<th>Depuis millesime</th>
+		<th>Jusque millesime</th>
+	</tr>
+	{% for variable in variable_desc %}
+	<tr>
+		<td>{{variable.int_code}}</td>
+		<td>{{variable.valeur}}</td>
+		<td>{{variable.description}}</td>
+		<td>{{variable.observation}}</td>
+		<td>{{variable.decrypt_syntax_millesime.0}}</td>
+		<td><div>{% if variable.decrypt_syntax_millesime.1 == None %}<i class="fa fa-check"></i> {% else %} {{variable.decrypt_syntax_millesime.1}} {% endif %}</div></td>
+	</tr>
+	{% endfor %}
+</table>
+
+{% endblock %} 

@@ -1,0 +1,83 @@
+{% extends "base_docff_ta.html" %}
+{% load staticfiles %}
+
+{% block contenu %}
+
+<div class="page-header">
+<div style="text-align: center">
+			<img src="{% static "img/tables_agregees.png" %}" alt="Carte cliquable" usemap="#map">
+			<MAP name=map>
+			<AREA href="{% url 'dictionnaire_ta:doc_table' "section" "" %}" shape="rect" coords="45,620,200,640" alt="table_sections" title="table_sections">
+			<AREA href="{% url 'dictionnaire_ta:doc_table' "commune" "" %}" shape="rect" coords="45,565,195,585" alt="table_communes" title="table_communes">
+			<AREA href="{% url 'dictionnaire_ta:doc_table' "canton" "" %}" shape="rect" coords="45,495,195,510" alt="table_cantons" title="table_cantons">
+			<AREA href="{% url 'dictionnaire_ta:doc_table' "arrondissement" "" %}" shape="rect" coords="45,420,255,440" alt="table_arrondissements" title="table_arrondissements">
+			<AREA href="{% url 'dictionnaire_ta:doc_table' "departement" "" %}" shape="rect" coords="45,360,225,380" alt="table_departements" title="table_departements">
+			<AREA href="{% url 'dictionnaire_ta:doc_table' "region" "" %}" shape="rect" coords="45,295,185,320" alt="table_regions" title="table_regions">
+			
+			<AREA href="{% url 'dictionnaire_ta:doc_table' "carroyage" "" %}" shape="rect" coords="755,295,915,320" alt="carroy10km" title="carroy10km">
+			<AREA href="{% url 'dictionnaire_ta:doc_table' "carroyage" "" %}" shape="rect" coords="755,380,910,400" alt="carroy1km" title="carroy1km">
+			<AREA href="{% url 'dictionnaire_ta:doc_table' "carreaux_vides" "" %}" shape="rect" coords="755,400,885,420" alt="carroy1kmv" title="carroy1kmv">
+			<AREA href="{% url 'dictionnaire_ta:doc_table' "carroyage100" "" %}" shape="rect" coords="755,480,915,505" alt="carroy100m" title="carroy100m">
+			<AREA href="{% url 'dictionnaire_ta:doc_table' "carreaux_vides" "" %}" shape="rect" coords="755,505,880,520" alt="carroy100mv" title="carroy100mv">
+
+			<AREA href="{% url 'dictionnaire_ta:doc_table' "pdlmp" "" %}" shape="rect" coords="520,295,665,315" alt="pdlmp" title="pdlmp">
+			<AREA href="{% url 'dictionnaire_ta:doc_table' "uf" "" %}" shape="rect" coords="520,405,725,425" alt="uf" title="uf">
+			<AREA href="{% url 'dictionnaire_ta:doc_table' "TUP" "" %}" shape="rect" coords="520,500,700,530" alt="tup" title="tup">
+			
+			<AREA href="{% url 'dictionnaire_ta:doc_table' "batiment" "" %}" shape="rect" coords="285,295,455,315" alt="table_batiments" title="table_batiments">
+			
+			</MAP>
+	</div>
+<h3>Tables agrégées</h3>
+</div>
+{% for groupe_table in tables %}
+<div class="panel panel-default">
+    <div class="panel-heading">
+	    <h3 class="panel-title"><i class="fa fa-table"></i> Tables essentielles</h3>
+    </div>
+    <div class="panel-body">
+
+	<table class="table table-striped" width = "100 %">
+		{% for table in groupe_table.desc_table %}
+		<tr>
+			{% for nom, description in table.items %}
+			{% if nom == 'carroyage100' or nom == 'commune' or nom == 'TUP' %}
+			<td width="20%" style="vertical-align: middle;"><a href="{% url 'dictionnaire_ta:doc_table' nom "" %}">{{nom}}</a></td>
+			<td style="vertical-align: middle;">{{description}}</td>			
+			{% endif %}
+			{% endfor %}
+		</tr>	
+		{% endfor %}
+	</table> 
+	</div>
+</div>
+
+{% endfor %}
+
+<div class="page-header">
+{% for groupe_table in tables %}
+<div class="panel panel-default">
+    <div class="panel-heading">
+	    <h3 class="panel-title"><i class="fa fa-table"></i> Autres tables</h3>
+    </div>
+    <div class="panel-body">
+
+	<table class="table table-striped" width = "100 %">
+		{% for table in groupe_table.desc_table %}
+		<tr>
+			{% for nom, description in table.items %}
+			{% if nom != 'carroyage100' and nom != 'commune' and nom != 'TUP' %}
+			<td width="20%" style="vertical-align: middle;"><a href="{% url 'dictionnaire_ta:doc_table' nom "" %}">{{nom}}</a></td>
+			<td style="vertical-align: middle;">{{description}}</td>			
+			{% endif %}
+			{% endfor %}
+		</tr>	
+		{% endfor %}
+	</table> 
+	</div>
+</div>
+</div>
+
+{% endfor %} 
+
+{% endblock %} 

@@ -1,0 +1,103 @@
+{% extends "base_docff.html" %}
+{% load staticfiles %}
+{% load template_filters %}
+
+{% block contenu %}
+<body>
+	<div class="page-header">
+	<h3><i class="fa fa-table"></i> Table {{table}}</h3>
+	</div>
+	<p><span style = 'background : #FFCB87'>Les champs surlignés sont des champs créés par le Cerema</span></p>
+	Le code couleur proposé pour indiquer la fiabilité des variables est basé sur une estimation théorique non testée sur le terrain. Le classement des variables est donc susceptible d'être modifié.
+	<p><i class="fa fa-check"></i> indique la présence de la variable dans le dernier millésime.</p>
+	<table class="table-bordered table-striped table-condensed" width="100%">
+		<tr>
+			<th>Code couleur</th>
+			<th>Fiabilité</th>
+		</tr>
+		<tr>
+			<td bgcolor = "#009933"></td>
+			<td>Ces données sont très fiables, exhaustives, et ne nécessitent pas d'être confrontées à des données terrains.</td>
+		</tr>
+		<tr>
+			<td bgcolor = "#66CC00"></td>
+			<td>Ces données sont par construction très fiables, mais peuvent parfois présenter des décalages par rapport à une confrontation terrain (données déclaratives). Ces décalages peuvent être considérés comme non significatifs à une échelle communale.</td>
+		</tr>
+		<tr>
+			<td bgcolor = "#CCFF66"></td>
+			<td>Ces données sont fiables et utilisables mais peuvent ne pas être exhaustives ou bien présenter des limites d'utilisation.</td>
+		</tr>
+		<tr>
+			<td bgcolor = "#FFFF00"></td>
+			<td>Ces données peuvent présenter des soucis de réactualisation dans leurs modalités les plus fines. Elles peuvent cependant être utilisées grâce à des regroupements, ou des précautions particulières.</td>
+		<tr>
+			<td bgcolor = "#FF950E"></td>
+			<td>Ces données doivent être considérées comme indicatives et leur fiabilité comme incertaine. Les variables ne peuvent être à nouveau croisées avec d'autres données. Il n'est pas conseillé d'utiliser ces données.</td>
+		</tr>
+	</table>
+	<br>
+
+	<select class="selectpicker" multiple data-live-search="true" data-max-options="1" onChange="window.document.location.href=this.options[this.selectedIndex].value;">
+		<optgroup>
+			<option value = '{% url 'dictionnaire:doc_table' table "Multi" "" %}'>Multi</option>
+		</optgroup>
+		<optgroup>
+		{% for millesime in liste_millesimes %}
+			<option value = "{% url 'dictionnaire:doc_table' table millesime '' %}" {% if url_millesime == millesime %}selected{% endif %}>{{millesime}}</option>
+		{% endfor %}
+		</optgroup>
+	</select>
+
+	<script type="text/javascript">
+		$('.selectpicker').selectpicker({noneSelectedText: 'Choix millésime'});  
+	</script>
+
+	<br>
+	<br>
+
+	<table class="table-bordered table-striped table-condensed" width="100%">
+		<tr>
+			<th>N°</th>
+			<th>Nom</th>
+			<th>Description</th>
+	        <th>Observation</th>
+			<th>Type</th>
+			<th>Depuis millésime</th>
+			<th>Jusque millésime</th>
+			<th>Fiabilité</th>
+			<th>Doc</th>
+		</tr>
+	{% for var in liste_ordre %}
+		{% for variable in liste_variables_millesime %}
+			{% if var == variable.nom %}
+		        	{% if variable_recherche == variable.nom %}
+	        			<script>
+	        				$(function() {
+	        					 $('html, body').animate({scrollTop:$('#{{variable_recherche}}').offset().top}, 'slow');
+	        				});
+	        			</script>
+	    			{% endif %}
+	        		<tr {% if variable_recherche == variable.nom %} class="recherche" {% endif %}>		
+	        			<td {% if variable.origine == "Cerema" %} bgcolor = '#FFCB87' {% endif %}>{{liste_ordre|index:variable.nom}}<a id={{variable.nom}}></a></td>
+	        			<td {% if variable.origine == "Cerema" %} bgcolor = '#FFCB87' {% endif %}>{% if variable.url_modalite != None %} <a href = '{{variable.url_modalite}}'>{{variable.nom}}</a> {% else %} {{variable.nom}} {% endif %}</td>
+	        			<td {% if variable.origine == "Cerema" %}  bgcolor = '#FFCB87' {% endif %}>{{variable.description}}</td>
+	        			<td {% if variable.origine == "Cerema" %}  bgcolor = '#FFCB87' {% endif %}>{% if variable.observation != NULL %} {{variable.observation}} {% endif %}</td>
+	        			<td {% if variable.origine == "Cerema" %} bgcolor = '#FFCB87' {% endif %}>{{variable.type}}</td>
+	        			<td {% if variable.origine == "Cerema" %} bgcolor = '#FFCB87' {% endif %}><div style="text-align:center">{{variable.decrypt_syntax_millesime.0}}</div></td>
+	        			<td {% if variable.origine == "Cerema" %} bgcolor = '#FFCB87' {% endif %}>
+	        				<div style="text-align:center"> {% if variable.decrypt_syntax_millesime.1 == None %}<i class="fa fa-check"></i> {% else %} {{variable.decrypt_syntax_millesime.1}} {% endif %}</div></td>
+	        			<td {% if variable.fiabilite == 'A' %} bgcolor = "#009933"
+							{% elif variable.fiabilite == 'B' %} bgcolor = "#66CC00"
+							{% elif variable.fiabilite == 'C' %} bgcolor = "#CCFF66"
+							{% elif variable.fiabilite == 'D' %} bgcolor = "#FFFF00"
+							{% elif variable.fiabilite == 'E' %} bgcolor = "#FF950E"
+							{% endif %}>
+						</td>
+	        			<td>{% if variable.doc != "" and variable.doc != NULL %} <div style="text-align:center"><a href ="/static/fiches/{{variable.url_doc}}"> <i class="fa fa-download"></i></a></div> {% endif %} </td>
+	        		</tr>
+			{% endif %}
+		{% endfor %}
+	{% endfor %}
+	</table>
+</body>
+{% endblock %} 
